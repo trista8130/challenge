@@ -1,12 +1,14 @@
-'use strict';
-const mockDBCalls = require('../database/index.js');
+"use strict";
+const mockDBCalls = require("../database/index.js");
 
 const getListOfAgesOfUsersWithHandler = async (request, response) => {
-    const itemToLookup = 'carrot';
-    const data = await mockDBCalls.getListOfAgesOfUsersWith(itemToLookup);
-    return response.status(200).send(JSON.stringify(data));
+//   const itemToLookup = "tv";
+//   console.log("server", request.query);
+  const data = await mockDBCalls.getListOfAgesOfUsersWith(request.query.item);
+
+  return response.status(200).send(JSON.stringify(data));
 };
 
 module.exports = (app) => {
-    app.get('/users/age', getListOfAgesOfUsersWithHandler);
+  app.get("/users/age", getListOfAgesOfUsersWithHandler);
 };
