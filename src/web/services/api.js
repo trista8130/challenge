@@ -10,7 +10,6 @@ const config = {
 };
 
 const fetchAllUser = () => {
-  console.log('all')
   return axios
     .get(`${port}/users`)
     .then((response) => response.data)

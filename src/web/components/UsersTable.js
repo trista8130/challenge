@@ -8,23 +8,35 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
+const useStyles = makeStyles({
+  userTable: { marginBottom: "40px" },
+  userList: {
+    minWidth: 650,
+  },
+  head: {
+    fontWeight: 600,
+  },
+
+});
+
 export default function UsersTable({ users }) {
+  const classes = useStyles();
   return (
-    <div>
+    <div className={classes.userTable}>
       <h1>All Users</h1>
       <p>Users and their age</p>
       <TableContainer component={Paper}>
-        <Table className="userTable" aria-label="simple table">
+        <Table className={classes.userList} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>User Name</TableCell>
-              <TableCell>Age</TableCell>
+              <TableCell className={classes.head}>User Name</TableCell>
+              <TableCell className={classes.head}>Age</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users &&
               users.map((user, i) => (
-                <TableRow key={`user_${i}`}>
+                <TableRow key={`user_${i}`} hover>
                   <TableCell component="th" scope="row">
                     {user.username}
                   </TableCell>

@@ -23,18 +23,14 @@ const getUsers = () => {
 const getListOfAgesOfUsersWith = (item) => {
   const dataAccessMethod = async () => {
     const allUsers = await getUsers();
-
     const ageOfList = _.pickBy(db.itemsOfUserByUsername, (list, name) => {
       return list.includes(item);
     });
-
     const nameOfList = _.map(ageOfList, (v, k) => k);
-
     const ageFilter = allUsers.reduce(
       (a, o) => (nameOfList.includes(o.username) && a.push(o.age), a),
       []
     );
-
     const countObj = new Object();
     ageFilter.forEach((i) => {
       if (!Object.keys(countObj).includes(i.toString())) {
@@ -43,7 +39,6 @@ const getListOfAgesOfUsersWith = (item) => {
         countObj[i] += 1;
       }
     });
-
     return Object.keys(countObj).map((v) => {
       return { age: v, count: countObj[v] };
     });
