@@ -9,9 +9,10 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   ageTable: { marginBottom: "200px" },
   ageList: {
     minWidth: 650,
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
     top: "-350px",
     transitionDuration: ".6s",
     zIndex: 1,
-    backgroundColor:"#eeee"
+    backgroundColor: "#eeee",
   },
   disactive: { display: "none" },
   active: {
@@ -43,18 +44,34 @@ const useStyles = makeStyles({
   item: {
     padding: "5px 10px",
   },
-});
+  spinners: {
+    width: "100%",
+    "& > * + *": {
+      marginTop: theme.spacing(2),
+    },
+  },
+}));
 const AgeTable = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [item, setItem] = useState("__");
+  const [itemsList, setItemsList] = useState([]);
   const [ageOfList, setAgeOfList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const getItemsList = async () => {
+      const response = await Service.fetchAllItems(item);
+      setItemsList(response);
+    };
+    getItemsList();
+  }, []);
   useEffect(() => {
     const getAges = async () => {
       const response = await Service.fetchListOfAges(item);
-      console.log("ages", response);
+     // console.log("ages", response);
       setAgeOfList(response);
+      setLoading(false);
     };
     getAges();
   }, [item]);
@@ -63,23 +80,15 @@ const AgeTable = () => {
   };
   const handleSelectItem = (e) => {
     console.log(e.target.innerText);
+    setLoading(true);
     setItem(e.target.innerText);
-    setOpen(false)
+    setOpen(false);
   };
-  const itemsList = [
-    "carrot",
-    "apple",
-    "grapes",
-    "cake",
-    "crackers",
-    "chips",
-    "tv",
-    "ham",
-    "beef",
-  ];
+
   return (
     <div className={classes.ageTable}>
       <h1>Age Demongraphic of Users With {item}</h1>
+
       <div className={classes.dropContainer}>
         <div>
           <Button variant="contained" onClick={handleDropDown}>
@@ -101,27 +110,32 @@ const AgeTable = () => {
           </TableBody>
         </Table>
       </div>
-      <TableContainer component={Paper}>
-        <Table className={classes.ageList} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.head}>Age</TableCell>
-              <TableCell className={classes.head}>Counrt</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {ageOfList &&
-              ageOfList.map((item, i) => (
-                <TableRow key={`ageItem_${i}`} hover>
-                  <TableCell component="th" scope="row">
-                    {item.age}
-                  </TableCell>
-                  <TableCell>{item.count}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {loading ? (
+        <LinearProgress className={classes.spinners} />
+      ) : (
+        <TableContainer component={Paper}>
+          <Table className={classes.ageList} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.head}>Age</TableCell>
+                <TableCell className={classes.head}>Count</TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {ageOfList &&
+                ageOfList.map((item, i) => (
+                  <TableRow key={`ageItem_${i}`} hover>
+                    <TableCell component="th" scope="row">
+                      {item.age}
+                    </TableCell>
+                    <TableCell>{item.count}</TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </div>
   );
 };

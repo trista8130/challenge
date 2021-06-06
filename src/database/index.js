@@ -20,6 +20,21 @@ const getUsers = () => {
   return mockDBCall(dataAccessMethod);
 };
 
+const getItemsList = () => {
+  const dataAccessMethod = () =>
+    Object.values(db.itemsOfUserByUsername)
+      .reduce((a, c) => {
+        return a.concat(c);
+      })
+      .reduce((a, c) => {
+        if (a.indexOf(c) === -1) {
+          a.push(c);
+        }
+        return a;
+      }, []);
+  return mockDBCall(dataAccessMethod);
+};
+
 const getListOfAgesOfUsersWith = (item) => {
   const dataAccessMethod = async () => {
     const allUsers = await getUsers();
@@ -49,5 +64,6 @@ const getListOfAgesOfUsersWith = (item) => {
 
 module.exports = {
   getUsers,
+  getItemsList,
   getListOfAgesOfUsersWith,
 };

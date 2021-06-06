@@ -15,6 +15,14 @@ const fetchAllUser = () => {
     .then((response) => response.data)
     .catch((err) => console.log(err.response));
 };
+const fetchAllItems = () => {
+  return axios
+    .get(`${port}/users/items`)
+    .then((response) => response.data)
+    .catch((err) => console.log(err.response));
+};
+
+
 const fetchListOfAges = (item) => {
   return axios
     .get(`${port}/users/age`, {
@@ -26,6 +34,7 @@ const fetchListOfAges = (item) => {
 
 const Servides = {
   fetchAllUser,
+  fetchAllItems,
   fetchListOfAges,
 };
 
